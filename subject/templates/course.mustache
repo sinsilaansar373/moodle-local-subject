@@ -1,0 +1,21 @@
+  <style>
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+ </style>
+<div class="wrapper">
+{{#sub}}
+<a href="/school/course/view.php?id={{id}}">
+    <div class="card-img-top" style=" background: #3399ff; width: 300px; height: 50px; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);margin-bottom: 10px;margin-right: 10px;margin-left: 10px;">
+        <span style="color: white; font-size: 16px;">{{fullname}}</span>
+    </div>
+</a>
+  {{/sub}}
+</div>

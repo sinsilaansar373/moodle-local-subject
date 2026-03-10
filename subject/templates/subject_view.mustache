@@ -1,0 +1,94 @@
+<div class="form-wrap">
+    <div class="container-fluid">
+        <div class="form-card card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">{{#str}} subject_listing, local_subject {{/str}}</h4>
+                <a href="{{subjectaddurl}}" class="btn btn-primary" style="text-decoration:none">
+                    + {{#str}} add_new, local_subject {{/str}}
+                </a>
+            </div>
+            <div class="table-filter mb-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex listing-top gap-3">
+                            <div class="form-group">
+                                <label>{{#str}} start_year, local_subject {{/str}}</label>
+                                <select class="form-select custom-select" aria-label="Select Start Year" id="academic">
+                                    {{#startYearOptions}}
+                                    <option value="{{value}}">{{label}}</option>
+                                    {{/startYearOptions}}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>{{#str}} class, local_subject {{/str}}</label>
+                                <select class="form-select custom-select" aria-label="Select class" id="class">
+                                    <option selected disabled>---- {{#str}} select_class, local_subject {{/str}} ----</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>{{#str}} division, local_subject {{/str}}</label>
+                                <select class="form-select custom-select" aria-label="Select division" id="division">
+                                    <option selected disabled>---- {{#str}} select_division, local_subject {{/str}} ----</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="demo">
+                <!-- Subjects table will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{{#js}}
+require(['jquery'], function($) {
+    $(document).ready(function() {
+        $("#academic").change(function() {
+            var startYear = $(this).val();
+            $("#demo").html(""); 
+            if (startYear != "") {
+                $.ajax({
+                    url: M.cfg.wwwroot + "/local/subject/ajax.php",
+                    data: { action: 'getclasses', academicid: startYear, sesskey: M.cfg.sesskey },
+                    type: 'POST',
+                    success: function(data) {
+                        $("#class").html(data);
+                        $("#division").html('<option selected disabled>---- {{#str}} select_division, local_subject {{/str}} ----</option>');
+                    }
+                });
+            }
+        });
+   
+        $("#class").change(function() {
+            var classs = $(this).val();
+            $("#demo").html(""); 
+            if (classs != "") {
+                $.ajax({
+                    url: M.cfg.wwwroot + "/local/subject/ajax.php",
+                    data: { action: 'getdivisions', classid: classs, sesskey: M.cfg.sesskey },
+                    type: 'POST',
+                    success: function(data) {
+                        $("#division").html(data);
+                    }
+                });
+            }
+        });
+       
+        $("#division").change(function() {
+            var divisionn = $(this).val();
+            if (divisionn != "") {
+                $.ajax({
+                    url: M.cfg.wwwroot + "/local/subject/ajax.php",
+                    data: { action: 'getsubjects', divisionid: divisionn, sesskey: M.cfg.sesskey },
+                    type: 'POST',
+                    success: function(data) {
+                        $("#demo").html(data);
+                    }
+                });
+            }
+        });
+    });
+});
+{{/js}}
