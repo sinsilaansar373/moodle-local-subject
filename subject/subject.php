@@ -78,7 +78,6 @@ else if ($formdata = $mform->get_data()) {
 }
 
 // Ensure JS for dynamic dropdowns is included.
-// In a real plugin, this would be an AMD module.
 $js = "
 require(['jquery'], function($) {
     $(document).ready(function() {
